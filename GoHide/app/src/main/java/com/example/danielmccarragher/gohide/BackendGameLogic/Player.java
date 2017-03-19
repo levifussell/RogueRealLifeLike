@@ -1,5 +1,7 @@
 package com.example.danielmccarragher.gohide.BackendGameLogic;
 
+import android.util.Log;
+
 /**
  * Created by levi on 18/03/17.
  */
@@ -33,6 +35,46 @@ public class Player extends GameObject{
     }
 
     return scopeString;
+  }
+
+  public boolean canMove(int intendedPosX, int intendedPosY)
+  {
+
+    switch (GridWorld.GET_CHAR(intendedPosX,intendedPosY))
+    {
+      case '#':
+        return false;
+      case 'H':
+      case GAME_CHARACTERS.EMPTY_SPACE:
+        return true;
+      case 'M':
+        return false;
+    }
+    return false;
+  }
+
+  public void moveUp(){
+    if(canMove(posX,posY-1)) {
+      Log.i("Controls","Move Up has been called");
+        GridWorld.SET_CHAR(posX,posY,'*');
+        GridWorld.SET_CHAR(posX,posY-1,'H');
+        posY -= 1;
+    }
+  }
+  public void moveLeft(){
+    if(canMove(posX-1,posY)) {
+      posX -= 1;
+    }
+  }
+  public void moveRight(){
+    if(canMove(posX+1,posY)) {
+      posX += 1;
+    }
+  }
+  public void moveDown(){
+    if(canMove(posX,posY+1)) {
+      posY += 1;
+    }
   }
 
   @Override
