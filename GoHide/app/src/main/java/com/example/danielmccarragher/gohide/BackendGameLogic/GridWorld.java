@@ -58,6 +58,11 @@ public class GridWorld {
     return GRID[y][x];
   }
 
+  public static void SET_CHAR(int x, int y, char placeHolder){
+      GRID[y][x] = placeHolder;
+  }
+
+
   public static GameObject GET_OBJ(int x, int y)
   {
     return GET_OBJ(x, y, GET_CHAR(x, y));
