@@ -2,9 +2,17 @@ package com.example.danielmccarragher.gohide.BackendGameLogic;
 
 
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 
 /**
@@ -43,13 +51,13 @@ public class GridWorld {
     loaded = true;
   }
 
-  public static void LOAD_LEVEL_FROM_FILE(String fileName)
+  public static void LOAD_LEVEL_FROM_FILE(Reader reader)
   {
     int levelWidth = 0;
     int levelHeight = 0;
     String levelData = "";
 
-    try(BufferedReader br = new BufferedReader(new FileReader(fileName)))
+    try(BufferedReader br = new BufferedReader(reader))
     {
       int lineCount = 0;
       String line;
@@ -77,6 +85,27 @@ public class GridWorld {
 
     GridWorld.LOAD_LEVEL(levelWidth, levelHeight, levelData);
   }
+
+  public static void LOAD_LEVEL_FROM_FILE(String fileName, Context context)
+  {
+    AssetManager am = context.getAssets();
+    try (InputStream is = am.open(fileName)){
+      LOAD_LEVEL_FROM_FILE(new InputStreamReader(is));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  public static void LOAD_LEVEL_FROM_FILE(String fileName)
+  {
+    try {
+      LOAD_LEVEL_FROM_FILE(new FileReader(fileName));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   public static void CLEAR()
   {

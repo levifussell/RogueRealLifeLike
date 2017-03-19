@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button rightButton;
     char grid[][];
 
-
-
     private SensorManager sensorManager;
     double ax, ay, az;
     double d_ax, d_ay, d_az = 0;   // these are the acceleration in x,y and z axis
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // Note that some of these constants are new as of API 16 (Jelly Bean)
             // and API 19 (KitKat). It is safe to use them, as they are inlined
             // at compile-time and do nothing on earlier devices.
-
         }
     };
     private View mControlsView;
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         };
 
         GridWorld.LOAD();
-        GridWorld.LOAD_LEVEL_FROM_FILE("app/src/main/java/com/example/danielmccarragher/gohide/TestLevels/Test1.txt");
+        GridWorld.LOAD_LEVEL_FROM_FILE("TestLevels/Test1.txt", this.getBaseContext());
         GridWorld.DEBUG_DRAW();
 
         upButton.setOnClickListener(new View.OnClickListener() {
