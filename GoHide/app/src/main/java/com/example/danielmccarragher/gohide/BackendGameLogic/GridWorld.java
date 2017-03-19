@@ -2,6 +2,9 @@ package com.example.danielmccarragher.gohide.BackendGameLogic;
 
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -9,8 +12,9 @@ import java.util.ArrayList;
  */
 public class GridWorld {
 
-  public static final int SIZE_X = 3;
-  public static final int SIZE_Y = 3;
+  public static boolean loaded = false;
+  public static int SIZE_X;
+  public static int SIZE_Y;
   public static char[][] GRID;
   public static ArrayList<GameObject> players;
   public static ArrayList<GameObject> enemies;
@@ -19,14 +23,14 @@ public class GridWorld {
   {
     players = new ArrayList<GameObject>();
     enemies = new ArrayList<GameObject>();
-
-    GRID = new char[SIZE_Y][SIZE_X];
-
-    CLEAR();
   }
 
-  public static void LOAD_LEVEL(String levelData)
+  public static void LOAD_LEVEL(int width, int height, String levelData)
   {
+    SIZE_X = width;
+    SIZE_Y = height;
+    GRID = new char[SIZE_Y][SIZE_X];
+
     for(int i = 0; i < levelData.length(); ++i)
     {
       int x = i % SIZE_X;
@@ -35,6 +39,43 @@ public class GridWorld {
       GRID[y][x] = c;
       ADD_OBJ(x, y, c);
     }
+
+    loaded = true;
+  }
+
+  public static void LOAD_LEVEL_FROM_FILE(String fileName)
+  {
+    int levelWidth = 0;
+    int levelHeight = 0;
+    String levelData = "";
+
+    try(BufferedReader br = new BufferedReader(new FileReader(fileName)))
+    {
+      int lineCount = 0;
+      String line;
+      while((line = br.readLine()) != null)
+      {
+        if(lineCount == 0)
+        {
+          levelWidth = Integer.parseInt(line);
+        }
+        else if(lineCount == 1)
+        {
+          levelHeight = Integer.parseInt(line);
+        }
+        else
+        {
+          levelData += line;
+        }
+
+        lineCount++;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println(e);
+    }
+
+    GridWorld.LOAD_LEVEL(levelWidth, levelHeight, levelData);
   }
 
   public static void CLEAR()

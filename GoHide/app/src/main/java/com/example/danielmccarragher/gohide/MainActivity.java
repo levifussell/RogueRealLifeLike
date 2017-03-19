@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     double ax, ay, az;
     double d_ax, d_ay, d_az = 0;   // these are the acceleration in x,y and z axis
+    double i_ay;
     long lastSensorCall = System.currentTimeMillis();
 
     /**
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //intialise sensor data
         sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-//        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
         setContentView(R.layout.activity_main);
         leftButton = (Button) findViewById(R.id.leftDirection);
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         };
 
         GridWorld.LOAD();
-        GridWorld.LOAD_LEVEL("******H**");
+        GridWorld.LOAD_LEVEL_FROM_FILE("app/src/main/java/com/example/danielmccarragher/gohide/TestLevels/Test1.txt");
         GridWorld.DEBUG_DRAW();
 
         upButton.setOnClickListener(new View.OnClickListener() {
@@ -295,29 +296,62 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor arg0, int arg1) {
     }
 
+    private float[] mLastAccelerometer = new float[3];
+    private float[] mLastMagnetometer = new float[3];
+    private boolean mLastAccelerometerSet = false;
+    private boolean mLastMagnetometerSet = false;
+    private float[] mR = new float[9];
+    private float[] mOrientation = new float[3];
     @Override
     public void onSensorChanged(SensorEvent event) {
+
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, mLastAccelerometer, 0, event.values.length);
+            mLastAccelerometerSet = true;
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, mLastMagnetometer, 0, event.values.length);
+            mLastMagnetometerSet = true;
+        }
+//        if (mLastAccelerometerSet && mLastMagnetometerSet) {
+//            SensorManager.getRotationMatrix(mR, null, mLastAccelerometer, mLastMagnetometer);
+//            SensorManager.getOrientation(mR, mOrientation);
+//            float azimuthInRadians = mOrientation[0];
+//            float azimuthInDegress = (float)(Math.toDegrees(azimuthInRadians)+360)%360;
+//
+//            System.out.println("degrees: " + -azimuthInDegress);
+//        }
 
         long diffLastCall = System.currentTimeMillis() - lastSensorCall;
 
 
         if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
-//            if(diffLastCall > 800)
-//                d_ay = 0;
+            if(diffLastCall > 800) {
+                d_ay = 0;
+                lastSensorCall = System.currentTimeMillis();
+            }
 
-            d_ax = event.values[0] - ax;
-            d_ay = event.values[1] - ay;
-            d_az = event.values[2] - az;
+            d_ax += event.values[0];
+            d_ay += event.values[1];
+            d_az += event.values[2];
 
             //check here for a drastic state change
-            double step_thresh = 0.1;
-            if(diffLastCall > 1000) {
-                lastSensorCall = System.currentTimeMillis();
-                if (d_ay > step_thresh) {
-                    System.out.println("STEP FORWARD: " + d_ay);
-                } else if (d_ay < -step_thresh) {
-                    System.out.println("STEP BACKWARD: " + d_ay);
+            double step_thresh = 50;
+//            if(diffLastCall > 1000) {
+
+                if (d_ay < -step_thresh) {
+//                    System.out.println("STEP BACKWARD: " + d_ay);
+                    d_ay = 0;
                 }
+                else if (d_ay > step_thresh) {
+//                    System.out.println("STEP FORWARD: " + d_ay);
+                    d_ay = 0;
+                }
+//            }
+
+            i_ay = Math.abs(event.values[1] - ay);
+            if(i_ay > 0.5) {
+                d_ay = 0;
+                lastSensorCall = System.currentTimeMillis();
             }
 
             ax=event.values[0];
@@ -325,9 +359,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             az=event.values[2];
 //            System.out.println("Sensor Readings: " + ax + ", " + ay + ", " + az);
         }
-//        else if(event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR)
-//        {
-//            System.out.println("DETECTED STEP!!: " + event.values[0]);
-//        }
+        else if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+        {
+//            float xAx = event.values[0];
+//            float yAx = event.values[1];
+//            float zAx = event.values[2];
+
+            System.out.println("GYRO Y: " + event.values[0]);
+        }
     }
 }
