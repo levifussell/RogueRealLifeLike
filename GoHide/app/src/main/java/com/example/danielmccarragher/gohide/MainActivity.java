@@ -155,6 +155,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("This is working");
+                if(GridWorld.players != null) {
+                    ((Player) GridWorld.players.get(0)).moveLeft();
+                    grid = ((Player) GridWorld.players.get(0)).getScope(1);
+                    updateGrid(grid);
+                }
+            }
+        });
+
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("This is working");
+                if(GridWorld.players != null) {
+                    ((Player) GridWorld.players.get(0)).moveRight();
+                    grid = ((Player) GridWorld.players.get(0)).getScope(1);
+                    updateGrid(grid);
+                }
+            }
+        });
+
         mVisible = true;
         grid = ((Player) GridWorld.players.get(0)).getScope(1);
         updateGrid(grid);

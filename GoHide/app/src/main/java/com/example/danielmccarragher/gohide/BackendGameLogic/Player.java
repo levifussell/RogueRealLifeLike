@@ -55,7 +55,6 @@ public class Player extends GameObject{
 
   public void moveUp(){
     if(canMove(posX,posY-1)) {
-      Log.i("Controls","Move Up has been called");
         GridWorld.SET_CHAR(posX,posY,'*');
         GridWorld.SET_CHAR(posX,posY-1,'H');
         posY -= 1;
@@ -63,11 +62,15 @@ public class Player extends GameObject{
   }
   public void moveLeft(){
     if(canMove(posX-1,posY)) {
+      GridWorld.SET_CHAR(posX,posY,'*');
+      GridWorld.SET_CHAR(posX-1,posY,'H');
       posX -= 1;
     }
   }
   public void moveRight(){
     if(canMove(posX+1,posY)) {
+      GridWorld.SET_CHAR(posX,posY,'*');
+      GridWorld.SET_CHAR(posX+1,posY,'H');
       posX += 1;
     }
   }
