@@ -60,6 +60,7 @@ public class Player extends GameObject {
         return false;
       case 'H':
       case GAME_CHARACTERS.EMPTY_SPACE:
+      case GAME_CHARACTERS.GOLD:
         return true;
       case 'M':
         if(fightMonster(intendedPosX,intendedPosY)){

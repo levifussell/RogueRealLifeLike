@@ -257,6 +257,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         Button outOfBounds = (Button)findViewById(buttons[buttonIterator]);
                         outOfBounds.setBackgroundResource(R.drawable.fire);
                         break;
+                    case GAME_CHARACTERS.GOLD:
+                        Button gold = (Button)findViewById(buttons[buttonIterator]);
+                        gold.setBackgroundResource(R.drawable.gold);
+                        break;
 
                 }
                 buttonIterator++;
