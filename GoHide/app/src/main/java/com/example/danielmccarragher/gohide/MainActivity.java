@@ -2,6 +2,7 @@ package com.example.danielmccarragher.gohide;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.danielmccarragher.gohide.BackendGameLogic.GAME_CHARACTERS;
 import com.example.danielmccarragher.gohide.BackendGameLogic.GridWorld;
 import com.example.danielmccarragher.gohide.BackendGameLogic.Player;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +30,12 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    Button leftButton;
+    Button upButton;
+    Button rightButton;
+    char grid[][];
+
+
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -97,7 +105,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
+        leftButton = (Button) findViewById(R.id.leftDirection);
+        upButton = (Button)findViewById(R.id.upDirection);
+        rightButton = (Button) findViewById(R.id.rightDirection);
 //initialize mAuth
         mAuth = FirebaseAuth.getInstance();
 
@@ -114,15 +125,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        setContentView(R.layout.activity_main);
+
         GridWorld.LOAD();
-        GridWorld.LOAD_LEVEL("......H..");
+        GridWorld.LOAD_LEVEL("******H**");
+        GridWorld.DEBUG_DRAW();
+
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("This is working");
+                if(GridWorld.players != null) {
+                    ((Player) GridWorld.players.get(0)).moveUp();
+                    grid = ((Player) GridWorld.players.get(0)).getScope(1);
+                    updateGrid(grid);
+                }
+            }
+        });
+
         mVisible = true;
-        char grid[][] = {{'M','*','*'},{'*','H','*'},{'*','#','#'}};
+        grid = ((Player) GridWorld.players.get(0)).getScope(1);
+        updateGrid(grid);
 
         //when movement has been logged
-        grid = ((Player)GridWorld.players.get(0)).getScope(1);
-        updateGrid(grid);
+
 
     }
     @Override
@@ -145,19 +170,19 @@ public class MainActivity extends AppCompatActivity {
             for(int j = 0; j < 3; j++){
 
                 switch(map[i][j]){
-                    case 'M':
+                    case GAME_CHARACTERS.ENEMY:
                         Button monster = (Button)findViewById(buttons[buttonIterator]);
                         monster.setBackgroundResource(R.drawable.monster);
                         break;
-                    case 'H':
+                    case GAME_CHARACTERS.PLAYER:
                         Button hero = (Button)findViewById(buttons[buttonIterator]);
                         hero.setBackgroundResource(R.drawable.hero);
                         break;
-                    case '*':
+                    case GAME_CHARACTERS.EMPTY_SPACE:
                         Button space = (Button)findViewById(buttons[buttonIterator]);
                         space.setBackgroundResource(R.drawable.free_tile);
                         break;
-                    case '#':
+                    case GAME_CHARACTERS.NULL_SPACE:
                         Button outOfBounds = (Button)findViewById(buttons[buttonIterator]);
                         outOfBounds.setBackgroundResource(R.drawable.fire);
                         break;
