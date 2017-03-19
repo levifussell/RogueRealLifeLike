@@ -1,6 +1,10 @@
 package com.example.danielmccarragher.gohide;
 
 import android.annotation.SuppressLint;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -25,9 +29,13 @@ import com.google.firebase.auth.FirebaseUser;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private SensorManager sensorManager;
+    double ax, ay, az;
+    double d_ax, d_ay, d_az;   // these are the acceleration in x,y and z axis
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -97,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //intialise sensor data
+        sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 
 //initialize mAuth
         mAuth = FirebaseAuth.getInstance();
@@ -249,5 +261,34 @@ public class MainActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor arg0, int arg1) {
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+            d_ax = event.values[0] - ax;
+            d_ay = event.values[1] - ay;
+            d_az = event.values[2] - az;
+
+            //check here for a drastic state change
+            double step_thresh = 0.8;
+            if(d_ay > step_thresh)
+            {
+                System.out.println("STEP FORWARD: " + d_ay);
+            }
+            else if(d_ay < -step_thresh)
+            {
+                System.out.println("STEP BACKWARD: " + d_ay);
+            }
+
+            ax=event.values[0];
+            ay=event.values[1];
+            az=event.values[2];
+//            System.out.println("Sensor Readings: " + ax + ", " + ay + ", " + az);
+        }
     }
 }
