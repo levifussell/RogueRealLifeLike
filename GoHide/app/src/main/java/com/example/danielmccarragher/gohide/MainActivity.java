@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private SensorManager sensorManager;
     double ax, ay, az;
-    double d_ax, d_ay, d_az;   // these are the acceleration in x,y and z axis
+    double d_ax, d_ay, d_az = 0;   // these are the acceleration in x,y and z axis
+    long lastSensorCall = System.currentTimeMillis();
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //intialise sensor data
         sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+//        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL);
 
         setContentView(R.layout.activity_main);
         leftButton = (Button) findViewById(R.id.leftDirection);
@@ -295,20 +297,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+
+        long diffLastCall = System.currentTimeMillis() - lastSensorCall;
+
+
         if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+//            if(diffLastCall > 800)
+//                d_ay = 0;
+
             d_ax = event.values[0] - ax;
             d_ay = event.values[1] - ay;
             d_az = event.values[2] - az;
 
             //check here for a drastic state change
-            double step_thresh = 0.8;
-            if(d_ay > step_thresh)
-            {
-                System.out.println("STEP FORWARD: " + d_ay);
-            }
-            else if(d_ay < -step_thresh)
-            {
-                System.out.println("STEP BACKWARD: " + d_ay);
+            double step_thresh = 0.1;
+            if(diffLastCall > 1000) {
+                lastSensorCall = System.currentTimeMillis();
+                if (d_ay > step_thresh) {
+                    System.out.println("STEP FORWARD: " + d_ay);
+                } else if (d_ay < -step_thresh) {
+                    System.out.println("STEP BACKWARD: " + d_ay);
+                }
             }
 
             ax=event.values[0];
@@ -316,5 +325,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             az=event.values[2];
 //            System.out.println("Sensor Readings: " + ax + ", " + ay + ", " + az);
         }
+//        else if(event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR)
+//        {
+//            System.out.println("DETECTED STEP!!: " + event.values[0]);
+//        }
     }
 }
