@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1093713383440",
+    "firebase_url": "https://go-hide.firebaseio.com",
+    "project_id": "go-hide",
+    "storage_bucket": "go-hide.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093713383440:android:f6db886d7166b5e5",
+        "android_client_info": {
+          "package_name": "com.example.danielmccarragher.gohide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093713383440-1sasqvau9vta6gg02969u6k92vf3jefr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.danielmccarragher.gohide",
+            "certificate_hash": "8ef62b06d1009665fedbdf4ca5220e1bf5db5509"
+          }
+        },
+        {
+          "client_id": "1093713383440-q4kgbt5qk9gpntnl1g5cgl7f27an076n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfdzNZBGrGbVlm0SNdVEtteg5q1aZbZxc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093713383440-q4kgbt5qk9gpntnl1g5cgl7f27an076n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
