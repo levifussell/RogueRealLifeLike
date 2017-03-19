@@ -4,4 +4,6 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="auth_failed">There has been a problem with the sign in</string>
+
+    <string name="title_activity_fight">FightActivity</string>
 </resources>

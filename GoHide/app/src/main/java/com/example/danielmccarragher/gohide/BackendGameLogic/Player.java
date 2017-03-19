@@ -1,19 +1,32 @@
 package com.example.danielmccarragher.gohide.BackendGameLogic;
 
+
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.danielmccarragher.gohide.FightActivity;
+import com.example.danielmccarragher.gohide.MainActivity;
+import com.example.danielmccarragher.gohide.R;
+
+import java.util.Random;
 
 /**
  * Created by levi on 18/03/17.
  */
-public class Player extends GameObject{
+public class Player extends GameObject {
 
   int armour = 60;
-  int health = 100;
+  int health = 70;
+  TextView actions;
+
   public Player(int posX, int posY)
   {
     super(posX, posY);
 
   }
+
+
 
   public char[][] getScope(int size)
   {
@@ -39,8 +52,7 @@ public class Player extends GameObject{
     return scopeString;
   }
 
-  public boolean canMove(int intendedPosX, int intendedPosY)
-  {
+  public boolean canMove(int intendedPosX, int intendedPosY){
 
     switch (GridWorld.GET_CHAR(intendedPosX,intendedPosY))
     {
@@ -64,8 +76,8 @@ public class Player extends GameObject{
     Enemy monster = (Enemy) GridWorld.GET_OBJ(monsterX,monsterY);
     int attack = attack();
     int attackResult = monster.takeDamage(attack);
-    Log.i("HIT","You hit the monster with" + attack + " attack");
-    if (attackResult == 0)
+    Log.i("HIT","You hit the monster with " + attack + " attack");
+    if (attackResult != 0)
     {
       Log.i("Result","Monster died!");
       //hero.addExperience(attackResult);
@@ -101,7 +113,11 @@ public class Player extends GameObject{
   }
 
   int attack(){
-    int attackRoll = (int)Math.random() * 99;
+    int attackRoll = 0;
+    Random diceRoller = new Random();
+    for (int i = 0; i < 10; i++) {
+      attackRoll = diceRoller.nextInt(60) + 1;
+    }
 
     return attackRoll;
   }

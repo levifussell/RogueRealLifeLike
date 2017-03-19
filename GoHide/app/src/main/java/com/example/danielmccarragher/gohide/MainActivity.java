@@ -1,6 +1,7 @@
 package com.example.danielmccarragher.gohide;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,7 +16,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.danielmccarragher.gohide.BackendGameLogic.GAME_CHARACTERS;
@@ -38,7 +42,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button upButton;
     Button rightButton;
     Button downButton;
+    Button playerTile;
     char grid[][];
+    TextView scoreText;
 
     private SensorManager sensorManager;
     double ax, ay, az;
@@ -113,13 +119,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
         //intialise sensor data
+        final Animation translateAnimation = AnimationUtils.loadAnimation(this,R.anim.translate);
+        final Animation translateLeftAnimation = AnimationUtils.loadAnimation(this,R.anim.translation_left);
+        final Animation translateRightAnimation = AnimationUtils.loadAnimation(this,R.anim.translation_right);
+        final Animation translateDownAnimation = AnimationUtils.loadAnimation(this,R.anim.translation_down);
+        playerTile = (Button)findViewById(R.id.button4);
         sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
-        setContentView(R.layout.activity_main);
+
         leftButton = (Button) findViewById(R.id.leftDirection);
         upButton = (Button)findViewById(R.id.upDirection);
         rightButton = (Button) findViewById(R.id.rightDirection);
@@ -152,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 System.out.println("This is working");
                 if(GridWorld.players != null) {
+                    playerTile.startAnimation(translateAnimation);
                     ((Player) GridWorld.players.get(0)).moveUp();
                     grid = ((Player) GridWorld.players.get(0)).getScope(1);
                     updateGrid(grid);
@@ -164,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 System.out.println("This is working");
                 if(GridWorld.players != null) {
+                    playerTile.startAnimation(translateLeftAnimation);
                     ((Player) GridWorld.players.get(0)).moveLeft();
                     grid = ((Player) GridWorld.players.get(0)).getScope(1);
                     updateGrid(grid);
@@ -171,11 +184,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+
+
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("This is working");
                 if(GridWorld.players != null) {
+                    playerTile.startAnimation(translateRightAnimation);
                     ((Player) GridWorld.players.get(0)).moveRight();
                     grid = ((Player) GridWorld.players.get(0)).getScope(1);
                     updateGrid(grid);
@@ -188,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) {
                 System.out.println("This is working");
                 if(GridWorld.players != null) {
+                    playerTile.startAnimation(translateDownAnimation);
                     ((Player) GridWorld.players.get(0)).moveDown();
                     grid = ((Player) GridWorld.players.get(0)).getScope(1);
                     updateGrid(grid);
@@ -196,10 +213,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
         mVisible = true;
+        //when movement has been logged
         grid = ((Player) GridWorld.players.get(0)).getScope(1);
         updateGrid(grid);
 
-        //when movement has been logged
+
 
 
     }
@@ -247,6 +265,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    public void updateFightInfo(String text){
+        scoreText.setText(text);
+    }
     public void createAccount(String email, String password){
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override

@@ -20,7 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+
+        <uses-feature
+            android:name="android.hardware.sensor.accelerometer"
+            android:required="true" />
+
+        <activity
+            android:name=".FightActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fight"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

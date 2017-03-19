@@ -1,5 +1,7 @@
 package com.example.danielmccarragher.gohide.BackendGameLogic;
 
+import java.util.Random;
+
 /**
  * Created by levi on 18/03/17.
  */
@@ -10,12 +12,12 @@ public class Enemy extends GameObject{
     super(posX, posY);
   }
 
-  int health = 80;
-  int armour = 50;
+  int health = 20;
+  int armour = 60;
 
   int takeDamage(int attack)
   {
-    attack -= armour;
+    armour -= attack  ;
     //check if armour has been pierced
     if (armour > 0)
     {
@@ -31,7 +33,12 @@ public class Enemy extends GameObject{
   }
 
   int attack(){
-    int attackRoll = (int)Math.random() * 60;
+    int attackRoll = 0;
+    Random diceRoller = new Random();
+    for (int i = 0; i < 10; i++) {
+      attackRoll = diceRoller.nextInt(60) + 1;
+
+    }
 
     return attackRoll;
   }
