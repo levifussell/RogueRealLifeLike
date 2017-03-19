@@ -74,7 +74,7 @@ public class GridWorld {
     {
       case GAME_CHARACTERS.PLAYER:
         return FIND_OBJ(x, y, players);
-      case GAME_CHARACTERS.EMPTY_SPACE:
+      case GAME_CHARACTERS.ENEMY:
         return FIND_OBJ(x, y, enemies);
       default:
         return null;

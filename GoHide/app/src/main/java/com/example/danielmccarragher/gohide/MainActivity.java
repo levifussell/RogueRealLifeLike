@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button leftButton;
     Button upButton;
     Button rightButton;
+    Button downButton;
     char grid[][];
 
 
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         leftButton = (Button) findViewById(R.id.leftDirection);
         upButton = (Button)findViewById(R.id.upDirection);
         rightButton = (Button) findViewById(R.id.rightDirection);
+        downButton = (Button)findViewById(R.id.downDirection);
 //initialize mAuth
         mAuth = FirebaseAuth.getInstance();
 
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         };
 
         GridWorld.LOAD();
-        GridWorld.LOAD_LEVEL("******H**");
+        GridWorld.LOAD_LEVEL("***M**H**");
         GridWorld.DEBUG_DRAW();
 
         upButton.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +177,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 System.out.println("This is working");
                 if(GridWorld.players != null) {
                     ((Player) GridWorld.players.get(0)).moveRight();
+                    grid = ((Player) GridWorld.players.get(0)).getScope(1);
+                    updateGrid(grid);
+                }
+            }
+        });
+
+        downButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("This is working");
+                if(GridWorld.players != null) {
+                    ((Player) GridWorld.players.get(0)).moveDown();
                     grid = ((Player) GridWorld.players.get(0)).getScope(1);
                     updateGrid(grid);
                 }

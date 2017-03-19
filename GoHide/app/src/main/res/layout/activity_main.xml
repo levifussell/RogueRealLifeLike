@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnCount="3"
-        android:rowCount="4"
+        android:rowCount="5"
         android:orientation="horizontal"
         android:paddingLeft="4dp">
 
@@ -86,7 +86,7 @@
         <Button
             android:id="@+id/leftDirection"
             android:layout_width="250px"
-            android:layout_height="100px"
+            android:layout_height="120px"
             android:layout_column="0"
             android:layout_row="3"
             android:text="Left" />
@@ -94,7 +94,7 @@
         <Button
             android:id="@+id/upDirection"
             android:layout_width="250px"
-            android:layout_height="100px"
+            android:layout_height="120px"
             android:layout_column="1"
             android:layout_row="3"
             android:text="Up" />
@@ -102,10 +102,18 @@
         <Button
             android:id="@+id/rightDirection"
             android:layout_width="250px"
-            android:layout_height="100px"
+            android:layout_height="120px"
             android:layout_column="2"
             android:layout_row="3"
             android:text="Right" />
+
+        <Button
+            android:id="@+id/downDirection"
+            android:layout_width="250px"
+            android:layout_height="120px"
+            android:layout_column="1"
+            android:layout_row="4"
+            android:text="Down" />
 
 
     </GridLayout>

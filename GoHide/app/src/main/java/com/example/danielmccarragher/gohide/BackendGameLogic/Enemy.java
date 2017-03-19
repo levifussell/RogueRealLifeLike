@@ -10,6 +10,31 @@ public class Enemy extends GameObject{
     super(posX, posY);
   }
 
+  int health = 80;
+  int armour = 50;
+
+  int takeDamage(int attack)
+  {
+    attack -= armour;
+    //check if armour has been pierced
+    if (armour > 0)
+    {
+      health -= attack;
+      //check if enemy died
+      if (health <= 0)
+      {
+        return 20; //return xp
+      }
+    }
+    return 0;
+
+  }
+
+  int attack(){
+    int attackRoll = (int)Math.random() * 60;
+
+    return attackRoll;
+  }
   @Override
   public void Update()
   {

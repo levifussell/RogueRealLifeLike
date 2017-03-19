@@ -7,6 +7,8 @@ import android.util.Log;
  */
 public class Player extends GameObject{
 
+  int armour = 60;
+  int health = 100;
   public Player(int posX, int posY)
   {
     super(posX, posY);
@@ -48,11 +50,61 @@ public class Player extends GameObject{
       case GAME_CHARACTERS.EMPTY_SPACE:
         return true;
       case 'M':
-        return false;
+        if(fightMonster(intendedPosX,intendedPosY)){
+          return true;
+        }else{
+          return false;
+        }
+
     }
     return false;
   }
 
+  private boolean fightMonster(int monsterX,int monsterY){
+    Enemy monster = (Enemy) GridWorld.GET_OBJ(monsterX,monsterY);
+    int attack = attack();
+    int attackResult = monster.takeDamage(attack);
+    Log.i("HIT","You hit the monster with" + attack + " attack");
+    if (attackResult == 0)
+    {
+      Log.i("Result","Monster died!");
+      //hero.addExperience(attackResult);
+      return true;
+    }
+
+    attack = monster.attack();
+    attackResult = takeDamage(attack);
+
+    if (attackResult != 0)
+    {
+      Log.i("Result","You died");
+      return false;
+    }
+    return false;
+  }
+
+  int takeDamage(int attack)
+  {
+    attack -= armour;
+    //check if armour has been pierced
+    if (armour > 0)
+    {
+      health -= attack;
+      //check if I have died
+      if (health <= 0)
+      {
+        return 1;
+      }
+    }
+    return 0;
+
+  }
+
+  int attack(){
+    int attackRoll = (int)Math.random() * 99;
+
+    return attackRoll;
+  }
   public void moveUp(){
     if(canMove(posX,posY-1)) {
         GridWorld.SET_CHAR(posX,posY,'*');
@@ -76,6 +128,8 @@ public class Player extends GameObject{
   }
   public void moveDown(){
     if(canMove(posX,posY+1)) {
+      GridWorld.SET_CHAR(posX,posY,'*');
+      GridWorld.SET_CHAR(posX,posY+1,'H');
       posY += 1;
     }
   }
