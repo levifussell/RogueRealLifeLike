@@ -1,5 +1,4 @@
-import java.awt.image.AreaAveragingScaleFilter;
-import java.sql.Array;
+
 import java.util.ArrayList;
 
 /**
@@ -7,8 +6,9 @@ import java.util.ArrayList;
  */
 public class GridWorld {
 
-  public static final int SIZE_X = 3;
-  public static final int SIZE_Y = 3;
+  public static boolean loaded = false;
+  public static int SIZE_X;
+  public static int SIZE_Y;
   public static char[][] GRID;
   private static ArrayList<GameObject> players;
   private static ArrayList<GameObject> enemies;
@@ -17,14 +17,18 @@ public class GridWorld {
   {
     players = new ArrayList<GameObject>();
     enemies = new ArrayList<GameObject>();
-
-    GRID = new char[SIZE_Y][SIZE_X];
-
-    CLEAR();
   }
 
-  public static void LOAD_LEVEL(String levelData)
+  public static void LOAD_LEVEL(int width, int height, String levelData)
   {
+    SIZE_X = width;
+    SIZE_Y = height;
+    GRID = new char[SIZE_Y][SIZE_X];
+
+    //first we clear the grid just to be safe
+    CLEAR();
+
+    //now we add the level data
     for(int i = 0; i < levelData.length(); ++i)
     {
       int x = i % SIZE_X;
@@ -33,6 +37,8 @@ public class GridWorld {
       GRID[y][x] = c;
       ADD_OBJ(x, y, c);
     }
+
+    loaded = true;
   }
 
   public static void CLEAR()
